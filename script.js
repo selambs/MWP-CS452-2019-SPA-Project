@@ -2,7 +2,7 @@ window.onload = myPage;
 function myPage() {
     const outlet = document.querySelector("#outlet");
 
-    //to log in to the page when we click the login button
+    //to log in to the page when we click the login button and the animation page will apear
     const loginPage = `<div> 
     <h2>Please Login Here</h2>
     User Name: <input type="text" id="userName" placeholder="mwp" value="mwp"> <br>
