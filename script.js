@@ -3,7 +3,6 @@ function myPage() {
     const outlet = document.querySelector("#outlet");
     let myToken, display;
 
-
     //to log in to the page when we click the login button and the animation page will apear
     const loginPage = `<div> 
     <h2>Please Login Here</h2>
@@ -26,13 +25,14 @@ function myPage() {
         <button id="toAnimate">Refresh Animation</button>
         <button id="toLogout">LogOut</button>
         </div>`
-
+    //login function that log in to the page when we click the login button
     function login() {
         //when we login the animation page will apear with refresh and logout button  
         outlet.innerHTML = animationPage;
         togetLocation();
         fetchToken();
         fetchAnimation();
+        display = document.getElementById("animateIt");
 
         let animationBtn = document.getElementById("toAnimate");
         animationBtn.addEventListener("click", fetchAnimation);
@@ -42,7 +42,7 @@ function myPage() {
     }
 
 
-    //to find the location whereever we go 
+    //to find the location where ever we go in all the places where gps is available
     function togetLocation() {
         navigator.geolocation.getCurrentPosition(function (position) {
             const lat = position.coords.latitude;
@@ -59,6 +59,7 @@ function myPage() {
                 });
         });
     }
+
 
     //to fetch the token from the given url and i will get the token after i fetch.
     myToken = `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtd2EiLCJpc3N1ZWRBdCI6IjIwMTktMTEtMjciLCJ1c2VybmFtZSI6Im13cCJ9.U9ciwh5lcPwFlJdxhNQkeiMc7AMYAnawfKNidw8CNDpTIUjNBL_EtDqkXG4qGOF8H_Ve1S2Gg2PwmCYOkfgmWA`
@@ -77,7 +78,7 @@ function myPage() {
     };
 
 
-    //to get all the animations when we log in to the page
+    //to get all the animations text when we log in to the page
     function fetchAnimation() {
         const animationURL = `http://mumstudents.org/api/animation `
         fetch(animationURL, {
@@ -88,15 +89,18 @@ function myPage() {
         })
             .then((res) => res.text())
             .then(data => {
-                //console.log(data)
-                let animations= data.split('=====\n');
-              
-               
+                let animations = data.split('=====');
+                display.innerHTML = animations;
             });
     };
 
 
+    //to animate the animation that is wrote in a text
+    function animation(){
 
+    }
+
+    
     //to logout from the page when we click the logout button
     function logOut() {
         outlet.innerHTML = loginPage;
