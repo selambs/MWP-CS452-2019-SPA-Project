@@ -1,7 +1,29 @@
 window.onload = myPage;
 function myPage() {
     const outlet = document.querySelector("#outlet");
-    let myToken, display;
+    let myToken, display, animations, toClear;
+
+    //create a router
+    const Router = function (name, routes) {
+        return {
+            routerName: name,
+            routers: routes
+        }
+    };
+    const myRouter = new Router("myRouter", [
+        {
+            path: "/",
+            name: "Root"
+        },
+        {
+            path: "/animation",
+            name: "animation"
+        }
+    ]);
+    //console.log(myRouter)
+    const currentPath = window.location.pathname;
+    //console.log(currentPath);
+
 
     //to log in to the page when we click the login button and the animation page will apear
     const loginPage = `<div> 
@@ -12,9 +34,6 @@ function myPage() {
     </div>`
     outlet.innerHTML = loginPage;
 
-    // let xmass=`<img src="x.webp">`
-    // outlet.innerHTML = xmass;
-
     let loginBtn = document.getElementById("toLogin")
     loginBtn.addEventListener("click", login);
 
@@ -22,24 +41,29 @@ function myPage() {
     const animationPage = `<div>
         <h2 id="greet"></h2>
         <textarea id="animateIt" rows="25" cols="60"> </textarea><br>
-        <button id="toAnimate">Refresh Animation</button>
+        <button id="nextAnimation">Refresh Animation</button>
         <button id="toLogout">LogOut</button>
         </div>`
     //login function that log in to the page when we click the login button
     function login() {
         //when we login the animation page will apear with refresh and logout button  
         outlet.innerHTML = animationPage;
+        //apear inside the login page and asks for a permission to detect the location
         togetLocation();
+        //fetched the token inside the login page 
         fetchToken();
+        //apear inside the login page and displayed with motion
         fetchAnimation();
         display = document.getElementById("animateIt");
-
-        let animationBtn = document.getElementById("toAnimate");
+        //refresh and goes to the next animation when we click the refresh animation button
+        let animationBtn = document.getElementById("nextAnimation");
         animationBtn.addEventListener("click", fetchAnimation);
-
+        history.back();
+        history.forward();
+        //logs out when we click the logout button
         let logOutBtn = document.getElementById("toLogout");
         logOutBtn.addEventListener("click", logOut);
-    }
+    };
 
 
     //to find the location where ever we go in all the places where gps is available
@@ -58,7 +82,7 @@ function myPage() {
                     getLocation.innerHTML = `Welcome all from ${city}, ${state}, ${country}`;
                 });
         });
-    }
+    };
 
 
     //to fetch the token from the given url and i will get the token after i fetch.
@@ -89,24 +113,42 @@ function myPage() {
         })
             .then((res) => res.text())
             .then(data => {
-                let animations = data.split('=====');
-                display.innerHTML = animations;
+                animations = data.split('=====\n');
+                if (toClear) { clearInterval(toClear) }
+                animate();
             });
     };
 
 
     //to animate the animation that is wrote in a text
-    function animation(){
+    function animate() {
+        let index = 0;
+        toClear = setInterval(() => {
+            display.innerHTML = animations[index];
+            index++;
+            if (index === animations.length) {
+                index = 0;
+            }
+        }, 200);
+    };
 
-    }
 
-    
+    //to handle the history changes
+    window.addEventListener('popstate', function (event) {
+        return event.state
+    });
+    history.pushState({ page: 1 }, "index", "?page=1");
+    history.pushState({ page: 2 }, "animation", "?page=2");
+ 
+
+
     //to logout from the page when we click the logout button
     function logOut() {
+        //displays the login page after we log out
         outlet.innerHTML = loginPage;
 
         let loginBtn = document.getElementById("toLogin")
         loginBtn.addEventListener("click", login);
-    }
+    };
 
 };
