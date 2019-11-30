@@ -2,34 +2,43 @@ window.onload = myPage;
 function myPage() {
     const outlet = document.querySelector("#outlet");
     let myToken, display, animations, toClear;
-
+    //const loginRoute = document.getElementById("loginView");
+    
     //create a router
-    const Router = function (name, routes) {
-        return {
-            routerName: name,
-            routers: routes
-        }
-    };
-    const myRouter = new Router("myRouter", [
-        {
-            path: "/",
-            name: "Root"
-        },
-        {
-            path: "/animation",
-            name: "animation"
-        }
-    ]);
+    // const Router = function (name, routes) {
+    //     return {
+    //         routerName: name,
+    //         routers: routes
+    //     }
+    // };
+    // const myRouter = new Router("myRouter", [
+    //     {
+    //         path: "/",
+    //         name: "Root"
+    //     },
+    //     {
+    //         path: "/animation",
+    //         name: "animation"
+    //     }
+    // ]);
     //console.log(myRouter)
-    const currentPath = window.location.pathname;
+    // const currentPath = window.location.pathname;
     //console.log(currentPath);
+    // if (currentPath === "/") {
+    //     loginRoute.innerHTML = "hi ";
+    // } else {
+    //     let r = myRouter.routers.filter(function (ra) {
+    //         return ra.path === currentPath;
+    //     })[0];
+    //     console.log(r);
+    // }
 
 
     //to log in to the page when we click the login button and the animation page will apear
-    const loginPage = `<div> 
+    const loginPage = `<div id="loginView"> 
     <h2>Please Login Here</h2>
     User Name: <input type="text" id="userName" placeholder="mwp" value="mwp"> <br>
-    Password: <input type="text" id="passWord" placeholder="123" value="123">
+    Password: <input type="text" id="passWord" placeholder="123" value="123"> <br>
     <button id="toLogin" >LogIn</button>
     </div>`
     outlet.innerHTML = loginPage;
@@ -38,9 +47,9 @@ function myPage() {
     loginBtn.addEventListener("click", login);
 
     //after we login the animation page will apear when we click the login button
-    const animationPage = `<div>
+    const animationPage = `<div id="animationView">
         <h2 id="greet"></h2>
-        <textarea id="animateIt" rows="25" cols="60"> </textarea><br>
+        <textarea id="animateIt" rows="23" cols="55"> </textarea><br>
         <button id="nextAnimation">Refresh Animation</button>
         <button id="toLogout">LogOut</button>
         </div>`
@@ -114,6 +123,7 @@ function myPage() {
             .then((res) => res.text())
             .then(data => {
                 animations = data.split('=====\n');
+                //console.log(data)
                 if (toClear) { clearInterval(toClear) }
                 animate();
             });
@@ -137,9 +147,9 @@ function myPage() {
     window.addEventListener('popstate', function (event) {
         return event.state
     });
-    history.pushState({ page: 1 }, "index", "?page=1");
+    history.pushState({ page: 1 }, "index", "index.html");
     history.pushState({ page: 2 }, "animation", "?page=2");
- 
+
 
 
     //to logout from the page when we click the logout button
