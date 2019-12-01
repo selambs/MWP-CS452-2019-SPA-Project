@@ -55,6 +55,7 @@ function myPage() {
         </div>`
     //login function that log in to the page when we click the login button
     function login() {
+        //debugger;
         //when we login the animation page will apear with refresh and logout button  
         outlet.innerHTML = animationPage;
         //apear inside the login page and asks for a permission to detect the location
@@ -62,13 +63,13 @@ function myPage() {
         //fetched the token inside the login page 
         fetchToken();
         //apear inside the login page and displayed with motion
-        fetchAnimation();
+        //fetchAnimation();
         display = document.getElementById("animateIt");
         //refresh and goes to the next animation when we click the refresh animation button
         let animationBtn = document.getElementById("nextAnimation");
         animationBtn.addEventListener("click", fetchAnimation);
-        history.back();
-        history.forward();
+        //history.back();
+        //history.forward();
         //logs out when we click the logout button
         let logOutBtn = document.getElementById("toLogout");
         logOutBtn.addEventListener("click", logOut);
@@ -95,7 +96,7 @@ function myPage() {
 
 
     //to fetch the token from the given url and i will get the token after i fetch.
-    myToken = `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtd2EiLCJpc3N1ZWRBdCI6IjIwMTktMTEtMjciLCJ1c2VybmFtZSI6Im13cCJ9.U9ciwh5lcPwFlJdxhNQkeiMc7AMYAnawfKNidw8CNDpTIUjNBL_EtDqkXG4qGOF8H_Ve1S2Gg2PwmCYOkfgmWA`
+    //myToken = `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtd2EiLCJpc3N1ZWRBdCI6IjIwMTktMTEtMjciLCJ1c2VybmFtZSI6Im13cCJ9.U9ciwh5lcPwFlJdxhNQkeiMc7AMYAnawfKNidw8CNDpTIUjNBL_EtDqkXG4qGOF8H_Ve1S2Gg2PwmCYOkfgmWA`
     function fetchToken() {
         const URL = `http://mumstudents.org/api/login `
         fetch(URL, {
@@ -107,7 +108,10 @@ function myPage() {
             })
         })
             .then((res) => res.json())
-            .then(data => data.token)
+            .then(data => {
+                myToken = data.token;
+                fetchAnimation();
+            })
     };
 
 
@@ -159,6 +163,8 @@ function myPage() {
 
         let loginBtn = document.getElementById("toLogin")
         loginBtn.addEventListener("click", login);
+        clearInterval(toClear)
+
     };
 
 };
