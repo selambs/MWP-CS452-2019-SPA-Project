@@ -42,6 +42,7 @@ function myPage() {
     <button id="toLogin" >LogIn</button>
     </div>`
     outlet.innerHTML = loginPage;
+    
 
     let loginBtn = document.getElementById("toLogin")
     loginBtn.addEventListener("click", login);
@@ -63,7 +64,6 @@ function myPage() {
         //fetched the token inside the login page 
         fetchToken();
         //apear inside the login page and displayed with motion
-        //fetchAnimation();
         display = document.getElementById("animateIt");
         //refresh and goes to the next animation when we click the refresh animation button
         let animationBtn = document.getElementById("nextAnimation");
@@ -110,6 +110,7 @@ function myPage() {
             .then((res) => res.json())
             .then(data => {
                 myToken = data.token;
+                //console.log(myToken)
                 fetchAnimation();
             })
     };
@@ -151,7 +152,7 @@ function myPage() {
     window.addEventListener('popstate', function (event) {
         return event.state
     });
-    history.pushState({ page: 1 }, "index", "index.html");
+    history.pushState({ page: 1 }, "index", "?page=1");
     history.pushState({ page: 2 }, "animation", "?page=2");
 
 
@@ -163,6 +164,7 @@ function myPage() {
 
         let loginBtn = document.getElementById("toLogin")
         loginBtn.addEventListener("click", login);
+
         clearInterval(toClear)
 
     };
