@@ -1,9 +1,9 @@
 window.onload = myPage;
 function myPage() {
     const outlet = document.querySelector("#outlet");
-    let myToken, display, animations, toClear;
+    let myToken, display, animations, time;
     //const loginRoute = document.getElementById("loginView");
-    
+
     //create a router
     // const Router = function (name, routes) {
     //     return {
@@ -21,18 +21,6 @@ function myPage() {
     //         name: "animation"
     //     }
     // ]);
-    //console.log(myRouter)
-    // const currentPath = window.location.pathname;
-    //console.log(currentPath);
-    // if (currentPath === "/") {
-    //     loginRoute.innerHTML = "hi ";
-    // } else {
-    //     let r = myRouter.routers.filter(function (ra) {
-    //         return ra.path === currentPath;
-    //     })[0];
-    //     console.log(r);
-    // }
-
 
     //to log in to the page when we click the login button and the animation page will apear
     const loginPage = `<div id="loginView"> 
@@ -42,7 +30,7 @@ function myPage() {
     <button id="toLogin" >LogIn</button>
     </div>`
     outlet.innerHTML = loginPage;
-    
+
 
     let loginBtn = document.getElementById("toLogin")
     loginBtn.addEventListener("click", login);
@@ -68,8 +56,6 @@ function myPage() {
         //refresh and goes to the next animation when we click the refresh animation button
         let animationBtn = document.getElementById("nextAnimation");
         animationBtn.addEventListener("click", fetchAnimation);
-        //history.back();
-        //history.forward();
         //logs out when we click the logout button
         let logOutBtn = document.getElementById("toLogout");
         logOutBtn.addEventListener("click", logOut);
@@ -116,29 +102,49 @@ function myPage() {
     };
 
 
-    //to get all the animations text when we log in to the page
-    function fetchAnimation() {
-        const animationURL = `http://mumstudents.org/api/animation `
-        fetch(animationURL, {
+    //to get all the animations text when we log in to the page using promise or async/await
+    // function fetchAnimation() {
+    //     const animationURL = `http://mumstudents.org/api/animation `
+    //     fetch(animationURL, {
+    //         method: "GET",
+    //         headers: {
+    //             'Authorization': `Bearer ${myToken}`
+    //         }
+    //     })
+    //         .then((res) => res.text())
+    //         .then(data => {
+    //             animations = data.split('=====\n');
+    //             //console.log(data)
+    //             // history.pushState(loginPage, null, "/");
+    //             history.pushState(animations, null, "/animation");
+
+
+    //             if (time) { clearInterval(time) }
+    //             animate();
+    //         });
+    // };
+
+    async function fetchAnimation() {
+        let anim_frame = await fetch(`http://mumstudents.org/api/animation `, {
             method: "GET",
             headers: {
                 'Authorization': `Bearer ${myToken}`
             }
         })
-            .then((res) => res.text())
-            .then(data => {
-                animations = data.split('=====\n');
-                //console.log(data)
-                if (toClear) { clearInterval(toClear) }
-                animate();
-            });
-    };
+        let data = await anim_frame.text();
+        animations = data.split('=====\n');
+        //console.log(data)
+        // // history.pushState(loginPage, null, "/");
+        // history.pushState(animations, null, "/animation");
+        if (time) { clearInterval(time) }
+        animate();
+    }
 
 
     //to animate the animation that is wrote in a text
     function animate() {
         let index = 0;
-        toClear = setInterval(() => {
+        time = setInterval(() => {
             display.innerHTML = animations[index];
             index++;
             if (index === animations.length) {
@@ -149,12 +155,15 @@ function myPage() {
 
 
     //to handle the history changes
-    window.addEventListener('popstate', function (event) {
-        return event.state
-    });
-    history.pushState({ page: 1 }, "index", "?page=1");
-    history.pushState({ page: 2 }, "animation", "?page=2");
+    window.addEventListener("popstate", function () {
+        clearInterval(time)
+        document.getElementById("animateIt").innerHTML = history.state;
+        animate();
 
+    })
+    // window.addEventListener("popstate", function () {
+    //     document.getElementById("loginView").innerHTML = history.state;
+    // })
 
 
     //to logout from the page when we click the logout button
@@ -165,7 +174,7 @@ function myPage() {
         let loginBtn = document.getElementById("toLogin")
         loginBtn.addEventListener("click", login);
 
-        clearInterval(toClear)
+        clearInterval(time)
 
     };
 
